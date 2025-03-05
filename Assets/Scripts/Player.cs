@@ -9,11 +9,13 @@ public class Player : MonoBehaviour
 
     private float horizontalInput;
     private float verticalInput;
+    private float jumpInput;
     private Rigidbody playerRb;
 
     public float mouseSensitivity = 100f;
     private float xRotation = 0f;
     private float yRotation = 0f;
+    private float zRotation = 0f;
 
     private void Start()
     {
@@ -23,8 +25,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.R)) CameraManager.instance.SwitchCam();
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
+        jumpInput = Input.GetAxisRaw("Jump");
         Rotate();
     }
 
@@ -32,7 +36,8 @@ public class Player : MonoBehaviour
     {
         Vector3 movementZ = transform.forward * verticalInput;
         Vector3 movementX = transform.right * horizontalInput;
-        Vector3 movement = (movementX + movementZ).normalized * acceleration;
+        Vector3 jumpMovement = transform.up * jumpInput;
+        Vector3 movement = (movementX + movementZ + jumpMovement).normalized * acceleration /** Time.fixedDeltaTime*/;
 
         playerRb.AddForce(movement, ForceMode.Acceleration);
         if (playerRb.velocity.magnitude > maxSpeed) { playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed); }
@@ -42,10 +47,12 @@ public class Player : MonoBehaviour
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
+        //float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
 
         xRotation -= mouseY;
         yRotation -= mouseX;
+        //zRotation -= inputZ;
 
-        transform.localRotation = Quaternion.Euler(xRotation, -yRotation, 0f);
+        transform.rotation = Quaternion.Euler(xRotation, -yRotation, zRotation);
     }
 }
