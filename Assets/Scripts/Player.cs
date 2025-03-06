@@ -14,6 +14,11 @@ public class Player : MonoBehaviour
 
     public float mouseSensitivity = 100f;
 
+    [SerializeField] Transform primaryWeaponSlot;
+    [SerializeField] Transform secondaryWeaponSlot;
+    private Gun gun;
+    GameObject gunInstance;
+
     private void Start()
     {
         Cursor.lockState = CursorLockMode.Locked;
@@ -27,6 +32,14 @@ public class Player : MonoBehaviour
         verticalInput = Input.GetAxisRaw("Vertical");
         jumpInput = Input.GetAxisRaw("Jump");
         Rotate();
+
+        gun?.Cooldown();
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
+            gun?.Shoot(Camera.main.transform);
+        }
     }
 
     private void FixedUpdate()
@@ -55,4 +68,12 @@ public class Player : MonoBehaviour
         transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
     }
 
+    public void EquipWeapon(WeaponData weapon)
+    {
+        if (weapon.type.Equals(GunType.Primary))
+            gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);
+        if (weapon.type.Equals(GunType.Secondary))
+            gunInstance = Instantiate(weapon.Gun, secondaryWeaponSlot.position, secondaryWeaponSlot.rotation, secondaryWeaponSlot);
+        gun = new Gun(weapon, gunInstance);
+    }
 }
