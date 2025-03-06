@@ -13,9 +13,6 @@ public class Player : MonoBehaviour
     private Rigidbody playerRb;
 
     public float mouseSensitivity = 100f;
-    private float xRotation = 0f;
-    private float yRotation = 0f;
-    private float zRotation = 0f;
 
     private void Start()
     {
@@ -37,22 +34,25 @@ public class Player : MonoBehaviour
         Vector3 movementZ = transform.forward * verticalInput;
         Vector3 movementX = transform.right * horizontalInput;
         Vector3 jumpMovement = transform.up * jumpInput;
-        Vector3 movement = (movementX + movementZ + jumpMovement).normalized * acceleration /** Time.fixedDeltaTime*/;
+        Vector3 movement = (movementX + movementZ + jumpMovement).normalized * acceleration /** Time.fixedDeltaTime**/;
 
         playerRb.AddForce(movement, ForceMode.Acceleration);
         if (playerRb.velocity.magnitude > maxSpeed) { playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed); }
     }
 
-    void Rotate() 
+    void Rotate()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
         float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        //float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
+        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
 
-        xRotation -= mouseY;
-        yRotation -= mouseX;
-        //zRotation -= inputZ;
+        // Crea quaternioni incrementali per ogni asse
+        Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
+        Quaternion rotY = Quaternion.AngleAxis(mouseX, Vector3.up);
+        Quaternion rotZ = Quaternion.AngleAxis(inputZ, Vector3.forward);
 
-        transform.rotation = Quaternion.Euler(xRotation, -yRotation, zRotation);
+        // Aggiorna la rotazione evitando la conversione in angoli di Eulero
+        transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
     }
+
 }
