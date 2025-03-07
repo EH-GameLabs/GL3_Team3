@@ -62,7 +62,7 @@ public class Player : MonoBehaviour
         // Crea quaternioni incrementali per ogni asse
         Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
         Quaternion rotY = Quaternion.AngleAxis(mouseX, Vector3.up);
-        Quaternion rotZ = Quaternion.AngleAxis(inputZ, Vector3.forward);
+        Quaternion rotZ = Quaternion.AngleAxis(-inputZ, Vector3.forward);
 
         // Aggiorna la rotazione evitando la conversione in angoli di Eulero
         transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
