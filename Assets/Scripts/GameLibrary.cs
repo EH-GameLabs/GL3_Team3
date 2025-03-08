@@ -17,5 +17,20 @@ public enum GunType
 }
 #endregion
 
+#region ENEMY
+public enum EnemyBehaviour
+{
+    Area,
+    All
+}
+
+public enum EnemyState
+{
+    Idle,
+    Chase,
+    Attack,
+}
+#endregion
+
 #endregion
 

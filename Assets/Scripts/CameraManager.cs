@@ -29,13 +29,13 @@ public class CameraManager : MonoBehaviour
     [SerializeField] Camera frontCam;
     [SerializeField] Camera backCamera;
 
-    void Update()
+    void LateUpdate()
     {
         cameraHolder.position = focus.position;
         cameraHolder.rotation = focus.rotation;
     }
 
-    public void SwitchCam() 
+    public void SwitchCam()
     {
         frontCam.gameObject.SetActive(!frontCam.gameObject.activeInHierarchy);
         backCamera.gameObject.SetActive(!frontCam.gameObject.activeInHierarchy);
