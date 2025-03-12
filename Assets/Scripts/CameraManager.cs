@@ -29,10 +29,19 @@ public class CameraManager : MonoBehaviour
     [SerializeField] Camera frontCam;
     [SerializeField] Camera backCamera;
 
+    [SerializeField] private float smoothTime = 0.1f;
+    private Vector3 velocity = Vector3.zero;
+
     void LateUpdate()
     {
-        cameraHolder.position = focus.position;
-        cameraHolder.rotation = focus.rotation;
+        //cameraHolder.position = focus.position;
+        //cameraHolder.rotation = focus.rotation;
+
+        // Interpola la posizione della camera verso quella del focus
+        cameraHolder.position = Vector3.SmoothDamp(cameraHolder.position, focus.position, ref velocity, smoothTime);
+
+        // Interpola la rotazione della camera verso quella del focus (opzionale)
+        cameraHolder.rotation = Quaternion.Lerp(cameraHolder.rotation, focus.rotation, Time.deltaTime * 999);
     }
 
     public void SwitchCam()

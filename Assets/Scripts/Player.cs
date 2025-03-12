@@ -51,182 +51,11 @@ public class Player : MonoBehaviour
         Vector3 jumpMovement = transform.up * jumpInput;
         Vector3 movement = (movementX + movementZ + jumpMovement).normalized * acceleration /** Time.fixedDeltaTime**/;
 
-        playerRb.AddForce(movement, ForceMode.Acceleration);
-        if (playerRb.velocity.magnitude > maxSpeed) { playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed); }
+        //playerRb.AddForce(movement, ForceMode.Acceleration);
+        //if (playerRb.velocity.magnitude > maxSpeed) { playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed); }
+        playerRb.velocity = movement;
     }
 
-    /*void Rotate()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
-
-        // Crea quaternioni incrementali per ogni asse
-        Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
-        Quaternion rotY = Quaternion.AngleAxis(mouseX, Vector3.up);
-        Quaternion rotZ = Quaternion.AngleAxis(-inputZ, Vector3.forward);
-
-        // Aggiorna la rotazione evitando la conversione in angoli di Eulero
-        transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
-    }*/
-
-    /*public float rot;
-    void Rotate()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
-
-        // Crea quaternioni incrementali per ogni asse
-        Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
-        Quaternion rotY = Quaternion.AngleAxis(mouseX, Vector3.up);
-        Quaternion rotZ = Quaternion.AngleAxis(-inputZ, Vector3.forward);
-
-        rot = transform.eulerAngles.z;
-        if (inputZ == 0 && transform.eulerAngles.z != 0)
-        {
-            if (transform.eulerAngles.z > 270)
-                rotZ = Quaternion.AngleAxis(+1, Vector3.forward);
-            if (transform.eulerAngles.z < 90)
-                rotZ = Quaternion.AngleAxis(-1, Vector3.forward);
-        }
-
-            // Aggiorna la rotazione evitando la conversione in angoli di Eulero
-            transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
-    }*/
-
-    /*public float snapAngle = 0;
-    public float rot;
-    void Rotate()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
-
-        // Crea quaternioni incrementali per ogni asse
-        Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
-        Quaternion rotY = Quaternion.AngleAxis(mouseX, Vector3.up);
-        Quaternion rotZ = Quaternion.AngleAxis(-inputZ, Vector3.forward);
-
-        rot = transform.eulerAngles.z;
-        if (inputZ == 0 && transform.eulerAngles.z != snapAngle)
-        {
-            if (transform.eulerAngles.z > 270)
-                if ((360 - transform.eulerAngles.z) < 2) {
-                    print("d");
-                    transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                }
-                    
-                else { rotZ = Quaternion.AngleAxis(+1, Vector3.forward); }
-
-            if (transform.eulerAngles.z < 90)
-                if ((transform.eulerAngles.z) < 2) {
-                    print("s");
-                    transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                }
-                    
-                else { rotZ = Quaternion.AngleAxis(-1, Vector3.forward); }
-        }
-
-        // Aggiorna la rotazione evitando la conversione in angoli di Eulero
-        transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
-    }*/
-
-    /*float snapAngle;
-    void Rotate()
-    {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
-
-        // Crea quaternioni incrementali per ogni asse
-        Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
-        Quaternion rotY = Quaternion.AngleAxis(mouseX, Vector3.up);
-        Quaternion rotZ = Quaternion.AngleAxis(-inputZ, Vector3.forward);
-
-        snapAngle = Mathf.Round(transform.eulerAngles.z / 90) * 90 % 360;
-        if (inputZ == 0 && transform.eulerAngles.z != snapAngle)
-        {
-            if (snapAngle == 0)
-            {
-                if (transform.eulerAngles.z > 270)
-                    if ((360 - transform.eulerAngles.z) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(+1, Vector3.forward); }
-
-                if (transform.eulerAngles.z < 90)
-                    if ((transform.eulerAngles.z) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(-1, Vector3.forward); }
-            }
-
-            if (snapAngle == 90)
-            {
-                if (transform.eulerAngles.z > 0 && transform.eulerAngles.z < 90)
-                    if ((90 - transform.eulerAngles.z) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(+1, Vector3.forward); }
-
-                if (transform.eulerAngles.z > 90 && transform.eulerAngles.z < 180)
-                    if ((transform.eulerAngles.z - 90) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(-1, Vector3.forward); }
-            }
-
-            if (snapAngle == 270)
-            {
-                if (transform.eulerAngles.z > 180 && transform.eulerAngles.z < 270)
-                    if ((270 - transform.eulerAngles.z) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(+1, Vector3.forward); }
-
-                if (transform.eulerAngles.z > 270 && transform.eulerAngles.z < 360)
-                    if ((transform.eulerAngles.z - 270) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(-1, Vector3.forward); }
-            }
-
-            if (snapAngle == 180)
-            {
-                if (transform.eulerAngles.z > 90 && transform.eulerAngles.z < 180)
-                    if ((180 - transform.eulerAngles.z) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(+1, Vector3.forward); }
-
-                if (transform.eulerAngles.z > 180 && transform.eulerAngles.z < 270)
-                    if ((transform.eulerAngles.z - 180) < 2)
-                    {
-                        transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
-                    }
-
-                    else { rotZ = Quaternion.AngleAxis(-1, Vector3.forward); }
-            }
-        }
-
-        // Aggiorna la rotazione evitando la conversione in angoli di Eulero
-        transform.localRotation = transform.localRotation * rotY * rotX * rotZ;
-    }*/
 
     float snapSpeed = 0.2f;
     void Rotate()
@@ -247,7 +76,7 @@ public class Player : MonoBehaviour
         {
             float diff = Mathf.DeltaAngle(rot, snapAngle); // Trova la differenza angolare più breve
 
-            if (Mathf.Abs(diff) < 2)
+            if (Mathf.Abs(diff) < 1 && Mathf.Abs(diff) != 0)
             {
                 // Se la differenza è minore di 2 gradi, imposta direttamente l'angolo
                 transform.rotation = Quaternion.Euler(transform.eulerAngles.x, transform.eulerAngles.y, snapAngle);
