@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
@@ -11,23 +12,18 @@ public class Enemy : MonoBehaviour
     [Header("Sight Stats")]
     [SerializeField][Range(0f, 60f)] private int angle;
     [SerializeField][Range(0f, 60f)] private int nrRay;
+    [SerializeField] private float attackRange;
 
     private GameObject player;
     private EnemyState enemyState;
 
     private int hp;
     private bool isPlayerInRange;
-    private bool isPlayerInAttackRange;
     private bool canShoot;
 
     // Player Movement
-    private Ray rayRight;
-    private Ray rayLeft;
-    private Ray rayUp;
-    private Ray rayDown;
-    private Ray rayForward;
-    private Ray rayBackward;
     private Vector3 destination;
+    private bool isRotating;
 
     private void Start()
     {
@@ -36,6 +32,7 @@ public class Enemy : MonoBehaviour
 
         enemyState = EnemyState.Idle;
         player = FindAnyObjectByType<Player>().gameObject;
+        canShoot = true;
     }
 
     private void Update()
@@ -43,11 +40,11 @@ public class Enemy : MonoBehaviour
         // se il game è !active return
 
         // SHOOTING
-        if (isPlayerInAttackRange && canShoot)
-        {
-            Shoot();
-            canShoot = false;
-        }
+        //if (isPlayerInAttackRange && canShoot)
+        //{
+        //    Shoot();
+        //    canShoot = false;
+        //}
 
         // AI STATES
         CheckStates();
@@ -69,9 +66,11 @@ public class Enemy : MonoBehaviour
                     CanSeePlayer();
                 break;
             case EnemyState.Chase:
+                transform.rotation = Quaternion.LookRotation(player.transform.position - transform.position);
                 CanSeePlayer();
                 break;
             case EnemyState.Attack:
+                AttackPlayer();
                 break;
         }
     }
@@ -104,12 +103,9 @@ public class Enemy : MonoBehaviour
         SetState(EnemyState.Idle);
     }
 
-
     #region AI STATES
     private void PatrolArea()
     {
-        print("destination: " + destination);
-
         if (IsArrived(destination))
         {
             destination = CalculateNextPatrolPoint();
@@ -119,8 +115,6 @@ public class Enemy : MonoBehaviour
 
             if (Physics.Raycast(new Ray(transform.position, moveDir), out RaycastHit hit, Vector3.Distance(transform.position, destination)))
             {
-                print("hit: " + hit.collider.transform.position);
-
                 // Per ciascun asse, sottraggo 1 o -1 in base alla direzione
                 destination = hit.collider.transform.position - new Vector3(
                     Mathf.Sign(moveDir.x),
@@ -128,23 +122,47 @@ public class Enemy : MonoBehaviour
                     Mathf.Sign(moveDir.z)
                 );
             }
+            isRotating = true;
+            StartCoroutine(RotateToDirection(destination, 0.5f));
+            print("starting rotation");
         }
         else
         {
             Debug.DrawLine(transform.position, destination, Color.red);
-            transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime);
+            if (!isRotating)
+            {
+                transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime);
+                transform.rotation = Quaternion.LookRotation(destination - transform.position);
+            }
         }
     }
 
+    public IEnumerator RotateToDirection(Vector3 targetDirection, float duration)
+    {
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = Quaternion.LookRotation(targetDirection - transform.position);
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = targetRotation;
+        isRotating = false;
+    }
 
     private bool IsArrived(Vector3 destination)
     {
-        if (Vector3.Distance(transform.position, destination) < 1f)
+        if (Vector3.Distance(transform.position, destination) < 0.5f)
         {
             return true;
         }
         return false;
     }
+
     private Vector3 CalculateNextPatrolPoint()
     {
         // Calcola le distanze disponibili in ciascuna direzione
@@ -222,6 +240,7 @@ public class Enemy : MonoBehaviour
         Vector3 nextPoint = transform.position + offsetX + offsetY + offsetZ;
         return nextPoint;
     }
+
     private float GetDistanceInDirection(Vector3 origin, Vector3 direction)
     {
         Ray ray = new Ray(origin, direction);
@@ -232,13 +251,13 @@ public class Enemy : MonoBehaviour
         return 0f;
     }
 
-
     private void ChasePlayer()
     {
         print("chasing");
-        // move towards player
+        Debug.DrawLine(transform.position, destination, Color.red);
+        transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime);
 
-        if (Vector3.Distance(transform.position, player.transform.position) < 3f)
+        if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
         {
             print("In AttackRange");
             SetState(EnemyState.Attack);
@@ -247,10 +266,13 @@ public class Enemy : MonoBehaviour
 
     private void AttackPlayer()
     {
-        //print("attacking");
-        // stop movement and attack player
+        if (canShoot)
+        {
+            canShoot = false;
+            Shoot();
+        }
 
-        if (Vector3.Distance(transform.position, player.transform.position) >= 3f)
+        if (Vector3.Distance(transform.position, player.transform.position) >= attackRange)
         {
             print("Out AttackRange");
             SetState(EnemyState.Chase);
@@ -279,6 +301,7 @@ public class Enemy : MonoBehaviour
 
     private IEnumerator ShootRoutine()
     {
+        print("Shoot");
         yield return new WaitForSeconds(enemyData.fireRate);
         canShoot = true;
     }
