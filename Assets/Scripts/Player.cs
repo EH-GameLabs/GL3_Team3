@@ -57,7 +57,7 @@ public class Player : MonoBehaviour
     }
 
 
-    float snapSpeed = 0.2f;
+    [SerializeField] private float snapSpeed = 0.2f;
     void Rotate()
     {
         float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
