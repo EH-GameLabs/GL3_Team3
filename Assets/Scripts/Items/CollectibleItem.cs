@@ -6,9 +6,20 @@ public class CollectibleItem : MonoBehaviour, ICollectible
 
     public void Collect(Player player)
     {
-        if (itemData is WeaponData weapon)
+        switch (itemData.type)
         {
-            player.EquipWeapon(weapon);
+            case ItemsType.Weapon:
+                player.EquipWeapon((WeaponData)itemData);
+                break;
+            case ItemsType.Ammo:
+                player.CollectAmmo((AmmoData)itemData);
+                break;
+            case ItemsType.Key:
+                player.CollectItem(itemData);
+                break;
+            case ItemsType.Hostage:
+                player.CollectHostage(itemData);
+                break;
         }
 
         Destroy(gameObject); // Rimuove l'oggetto dalla scena

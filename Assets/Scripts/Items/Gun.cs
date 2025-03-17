@@ -8,6 +8,10 @@ public class Gun
     float fireCooldown;
     public bool canShoot { get; private set; }
 
+    // Ammo
+    public int currentPrimaryAmmo;
+    public int currentSecondaryAmmo;
+
     public Gun(WeaponData gun, GameObject gunInstance)
     {
         this.gun = gun;
@@ -32,7 +36,7 @@ public class Gun
         if (canShoot)
         {
             Debug.Log("shooting");
-            Debug.Log(Tags.Enemy);
+
             // spara dal centro
             Ray ray = new Ray(firePoint.position, Camera.main.transform.forward);
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -46,10 +50,23 @@ public class Gun
 
             Debug.DrawRay(firePoint.position, Camera.main.transform.forward * 100, Color.red, 2f);
 
+            // primary ammo???
+            currentPrimaryAmmo--;
+
             // cooldown
             fireCooldown = 1f / gun.fireRate;
             canShoot = false;
         }
         Debug.Log("Nope");
+    }
+
+    public void AddPrimaryAmmo(int value)
+    {
+        currentPrimaryAmmo += value;
+    }
+
+    public void AddSecondaryAmmo(int value)
+    {
+        currentSecondaryAmmo += value;
     }
 }

@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 021132f7cce47684d8dcafdca3fa2237, type: 3}
-  m_Name: NewWeapon 1
+  m_Script: {fileID: 11500000, guid: 6a0e1a6011fb92e4090da976f68b3c64, type: 3}
+  m_Name: PrimaryAmmoData
   m_EditorClassIdentifier: 
-  itemName: test
+  itemName: 
   icon: {fileID: 0}
-  type: 0
-  damage: 5
-  fireRate: 2
-  Gun: {fileID: 2963421592752363537, guid: 345ec7ef31f90a94fb15365774d75df1, type: 3}
-  weaponType: 1
+  type: 1
+  ammo: 100
+  gunType: 0
