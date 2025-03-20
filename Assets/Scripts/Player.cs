@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
 
     private int keyQuantity;
     private int HostageCollected;
+    public int energy;
 
     private void Start()
     {
@@ -31,6 +32,7 @@ public class Player : MonoBehaviour
 
     void Update()
     {
+        if (playerInside) ChargingEnergy();
         if (Input.GetKeyDown(KeyCode.R)) CameraManager.instance.SwitchCam();
         horizontalInput = Input.GetAxisRaw("Horizontal");
         verticalInput = Input.GetAxisRaw("Vertical");
@@ -123,5 +125,40 @@ public class Player : MonoBehaviour
             gun.AddPrimaryAmmo(ammo.ammo);
         if (ammo.gunType.Equals(GunType.Secondary))
             gun.AddSecondaryAmmo(ammo.ammo);
+    }
+
+    // Incremento desiderato per secondo (modificabile dall'Inspector)
+    public float incrementPerSecond = 1f;
+
+    // Variabile interna per accumulare incrementi parziali
+    private float accumulator = 0f;
+    // Flag per verificare se il player è all'interno della zona
+    private bool playerInside = false;
+    public void ChargingEnergy() 
+    {
+        accumulator += incrementPerSecond * Time.deltaTime;
+        // Quando l'accumulatore supera 1, si incrementa il valore intero
+        if (accumulator >= 1f)
+        {
+            energy += 1;
+            accumulator = 0;
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("EnergyCharge"))
+        {
+            playerInside = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("EnergyCharge"))
+        {
+            playerInside = false;
+            accumulator = 0;
+        }
     }
 }
