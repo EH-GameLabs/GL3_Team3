@@ -40,7 +40,14 @@ public enum ItemsType
     Key,
     Hostage
 }
-
-#endregion
 #endregion
 
+#region DOORS
+public enum DoorsType
+{
+    Closed,
+    Secret,
+    Key
+}
+#endregion
+#endregion
