@@ -42,7 +42,14 @@ public enum ItemsType
     PowerUp_Shield,
     PowerUp_Energy,
 }
-
-#endregion
 #endregion
 
+#region DOORS
+public enum DoorsType
+{
+    Closed,
+    Secret,
+    Key
+}
+#endregion
+#endregion
