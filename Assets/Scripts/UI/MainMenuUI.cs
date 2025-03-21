@@ -7,6 +7,7 @@ public class MainMenuUI : BaseUI
     public void GoToHud()
     {
         UIManager.instance.ShowUI(UIManager.GameUI.HUD);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 
     public void GoToOptions()

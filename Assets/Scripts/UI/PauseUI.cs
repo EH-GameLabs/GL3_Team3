@@ -14,5 +14,6 @@ public class PauseUI : BaseUI
     public void GoToHud()
     {
         UIManager.instance.ShowUI(UIManager.GameUI.HUD);
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }

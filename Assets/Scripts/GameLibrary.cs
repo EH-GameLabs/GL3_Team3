@@ -38,7 +38,9 @@ public enum ItemsType
     Weapon,
     Ammo,
     Key,
-    Hostage
+    Hostage,
+    PowerUp_Shield,
+    PowerUp_Energy,
 }
 
 #endregion

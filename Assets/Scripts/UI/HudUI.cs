@@ -10,6 +10,12 @@ public class HudUI : BaseUI
         if (Input.GetKeyUp(KeyCode.Escape))
         {
             UIManager.instance.ShowUI(UIManager.GameUI.Pause);
+            Cursor.lockState = CursorLockMode.None;
+        }
+        if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            UIManager.instance.ShowUI(UIManager.GameUI.MiniMap);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

@@ -16,22 +16,24 @@ public class Player : MonoBehaviour
 
     [SerializeField] Transform primaryWeaponSlot;
     [SerializeField] Transform secondaryWeaponSlot;
-    private Gun gun;
+    private Gun primaryGun;
+    private Gun secondaryGun;
     GameObject gunInstance;
 
-    private int keyQuantity;
-    private int HostageCollected;
     public int energy;
+    public int shield;
 
     private void Start()
     {
-        Cursor.lockState = CursorLockMode.Locked;
+        //Cursor.lockState = CursorLockMode.Locked;
         transform.rotation = Quaternion.identity;
         playerRb = GetComponent<Rigidbody>();
     }
 
     void Update()
     {
+        if (UIManager.instance.GetCurrentActiveUI() != UIManager.GameUI.HUD) return;
+
         if (playerInside) ChargingEnergy();
         if (Input.GetKeyDown(KeyCode.R)) CameraManager.instance.SwitchCam();
         horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -39,12 +41,17 @@ public class Player : MonoBehaviour
         jumpInput = Input.GetAxisRaw("Jump");
         Rotate();
 
-        gun?.Cooldown();
+        primaryGun?.Cooldown();
 
         if (Input.GetMouseButtonDown(0))
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
-            gun?.Shoot(Camera.main.transform);
+            primaryGun?.Shoot(Camera.main.transform);
+        }
+        if (Input.GetMouseButtonDown(1))
+        {
+            //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
+            secondaryGun?.Shoot(Camera.main.transform);
         }
     }
 
@@ -99,32 +106,59 @@ public class Player : MonoBehaviour
     public void EquipWeapon(WeaponData weapon)
     {
         if (weapon.weaponType.Equals(GunType.Primary))
-            gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);
+        {
+            //gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);
+            primaryGun = new Gun(weapon, gunInstance);
+        }
         if (weapon.weaponType.Equals(GunType.Secondary))
-            gunInstance = Instantiate(weapon.Gun, secondaryWeaponSlot.position, secondaryWeaponSlot.rotation, secondaryWeaponSlot);
-        gun = new Gun(weapon, gunInstance);
+        {
+            //gunInstance = Instantiate(weapon.Gun, secondaryWeaponSlot.position, secondaryWeaponSlot.rotation, secondaryWeaponSlot);
+            secondaryGun = new Gun(weapon, gunInstance);
+        }
     }
 
     public void CollectItem(ItemData item)
     {
         print("item collected: " + item.name);
-        keyQuantity++;
-        print("keys: " + keyQuantity);
+        GameManager.instance.AddKeys();
+        print("keys: " + GameManager.instance.keysCollected);
     }
 
-    public void CollectHostage(ItemData item)
+    public void CollectHostage(HostageData item)
     {
         print("item collected: " + item.name);
-        HostageCollected++;
-        print("Hostages: " + HostageCollected);
+        GameManager.instance.AddHostage();
+        print("Hostage score: " + item.score);
     }
 
     public void CollectAmmo(AmmoData ammo)
     {
         if (ammo.gunType.Equals(GunType.Primary))
-            gun.AddPrimaryAmmo(ammo.ammo);
+            primaryGun?.AddPrimaryAmmo(ammo.ammo);
         if (ammo.gunType.Equals(GunType.Secondary))
-            gun.AddSecondaryAmmo(ammo.ammo);
+            secondaryGun?.AddSecondaryAmmo(ammo.ammo);
+    }
+
+    public void CollectPU_Shield(PowerUpData powerUp)
+    {
+        shield += powerUp.value;
+        if (shield > 100)
+        {
+            shield = 100;
+        }
+        Debug.Log("Added: " + powerUp.value);
+        Debug.Log("- shield: " + shield);
+    }
+
+    public void CollectPU_Energy(PowerUpData powerUp)
+    {
+        energy += powerUp.value;
+        if (energy > 100)
+        {
+            energy = 100;
+        }
+        Debug.Log("Added: " + powerUp.value);
+        Debug.Log("- energy: " + energy);
     }
 
     // Incremento desiderato per secondo (modificabile dall'Inspector)
@@ -134,7 +168,7 @@ public class Player : MonoBehaviour
     private float accumulator = 0f;
     // Flag per verificare se il player è all'interno della zona
     private bool playerInside = false;
-    public void ChargingEnergy() 
+    public void ChargingEnergy()
     {
         accumulator += incrementPerSecond * Time.deltaTime;
         // Quando l'accumulatore supera 1, si incrementa il valore intero

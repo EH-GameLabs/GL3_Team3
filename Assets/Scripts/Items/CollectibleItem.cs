@@ -18,7 +18,13 @@ public class CollectibleItem : MonoBehaviour, ICollectible
                 player.CollectItem(itemData);
                 break;
             case ItemsType.Hostage:
-                player.CollectHostage(itemData);
+                player.CollectHostage((HostageData)itemData);
+                break;
+            case ItemsType.PowerUp_Shield:
+                player.CollectPU_Shield((PowerUpData)itemData);
+                break;
+            case ItemsType.PowerUp_Energy:
+                player.CollectPU_Energy((PowerUpData)itemData);
                 break;
         }
 

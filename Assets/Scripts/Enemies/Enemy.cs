@@ -55,6 +55,17 @@ public class Enemy : MonoBehaviour
             if (enemyMotor.movementSpeed > 0)
                 Move();
         }
+
+        CheckIfAlive();
+    }
+
+    private void CheckIfAlive()
+    {
+        if (hp <= 0)
+        {
+            GameManager.instance.AddScore(enemyData.pointsOnDeath);
+            Destroy(gameObject);
+        }
     }
 
     public void CheckStates()
