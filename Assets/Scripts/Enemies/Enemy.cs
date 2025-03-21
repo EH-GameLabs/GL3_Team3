@@ -124,7 +124,11 @@ public class Enemy : MonoBehaviour
             // Calcola la direzione di movimento dal punto attuale verso la destinazione
             Vector3 moveDir = (destination - transform.position).normalized;
 
-            if (Physics.Raycast(new Ray(transform.position, moveDir), out RaycastHit hit, Vector3.Distance(transform.position, destination)))
+            //int layersToIgnore = LayerMask.GetMask("Seen");
+            //int layerMask = ~layersToIgnore; // Ignora questi layer
+            //print("Layer: " + layerMask);
+
+            if (Physics.Raycast(new Ray(transform.position, moveDir), out RaycastHit hit, Vector3.Distance(transform.position, destination), ~ignoreMe))
             {
                 // Per ciascun asse, sottraggo 1 o -1 in base alla direzione
                 destination = hit.collider.transform.position - new Vector3(
@@ -252,10 +256,11 @@ public class Enemy : MonoBehaviour
         return nextPoint;
     }
 
+    public LayerMask ignoreMe;
     private float GetDistanceInDirection(Vector3 origin, Vector3 direction)
     {
         Ray ray = new Ray(origin, direction);
-        if (Physics.Raycast(ray, out RaycastHit hit))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~ignoreMe))
         {
             return hit.distance;
         }

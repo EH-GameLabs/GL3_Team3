@@ -22873,7 +22873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a5e0f7f43c001bd429e4aae66c32a54b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 345468395}
+  target: {fileID: 1413065946197931576}
   distance: 50
   zoomSpeed: 2
   rotationSpeed: 100
@@ -28124,6 +28124,12 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b83078db22b7fc64aa996b2a4a0d8a0c, type: 3}
+--- !u!4 &1413065946197931576 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2501438410883173140, guid: b83078db22b7fc64aa996b2a4a0d8a0c,
+    type: 3}
+  m_PrefabInstance: {fileID: 1413065946197931575}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &5412320605925120763
 PrefabInstance:
   m_ObjectHideFlags: 0
