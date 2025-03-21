@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI.Table;
 
 public class Player : MonoBehaviour
 {
@@ -19,6 +18,9 @@ public class Player : MonoBehaviour
     [SerializeField] Transform secondaryWeaponSlot;
     private Gun gun;
     GameObject gunInstance;
+
+    private int keyQuantity;
+    private int HostageCollected;
 
     private void Start()
     {
@@ -94,10 +96,32 @@ public class Player : MonoBehaviour
 
     public void EquipWeapon(WeaponData weapon)
     {
-        if (weapon.type.Equals(GunType.Primary))
+        if (weapon.weaponType.Equals(GunType.Primary))
             gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);
-        if (weapon.type.Equals(GunType.Secondary))
+        if (weapon.weaponType.Equals(GunType.Secondary))
             gunInstance = Instantiate(weapon.Gun, secondaryWeaponSlot.position, secondaryWeaponSlot.rotation, secondaryWeaponSlot);
         gun = new Gun(weapon, gunInstance);
+    }
+
+    public void CollectItem(ItemData item)
+    {
+        print("item collected: " + item.name);
+        keyQuantity++;
+        print("keys: " + keyQuantity);
+    }
+
+    public void CollectHostage(ItemData item)
+    {
+        print("item collected: " + item.name);
+        HostageCollected++;
+        print("Hostages: " + HostageCollected);
+    }
+
+    public void CollectAmmo(AmmoData ammo)
+    {
+        if (ammo.gunType.Equals(GunType.Primary))
+            gun.AddPrimaryAmmo(ammo.ammo);
+        if (ammo.gunType.Equals(GunType.Secondary))
+            gun.AddSecondaryAmmo(ammo.ammo);
     }
 }

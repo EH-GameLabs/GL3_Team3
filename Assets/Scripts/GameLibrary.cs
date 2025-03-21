@@ -32,5 +32,15 @@ public enum EnemyState
 }
 #endregion
 
+#region ITEMS
+public enum ItemsType
+{
+    Weapon,
+    Ammo,
+    Key,
+    Hostage
+}
+
+#endregion
 #endregion
 
