@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b308e752d119c04c814a08d2187b71f, type: 3}
   m_Name: EnemyMotorData
   m_EditorClassIdentifier: 
-  movementSpeed: 1
+  movementSpeed: 10
   enemyIdle: 0
   enemyChasing: 0

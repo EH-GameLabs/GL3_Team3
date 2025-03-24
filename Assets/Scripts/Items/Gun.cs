@@ -38,8 +38,8 @@ public class Gun
             Debug.Log("shooting");
 
             // spara dal centro
-            Ray ray = new Ray(firePoint.position, Camera.main.transform.forward);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            Ray ray = new Ray(firePoint.position, Camera.main.transform.forward * 100);
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
             {
                 if (hit.collider.CompareTag(Tags.Enemy))
                 {
@@ -57,7 +57,6 @@ public class Gun
             fireCooldown = 1f / gun.fireRate;
             canShoot = false;
         }
-        Debug.Log("Nope");
     }
 
     public void AddPrimaryAmmo(int value)

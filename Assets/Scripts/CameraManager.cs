@@ -28,6 +28,7 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private Transform focus;
     [SerializeField] Camera frontCam;
     [SerializeField] Camera backCamera;
+    [SerializeField] Camera minimapCamera;
 
     [SerializeField] private float smoothTime = 0.1f;
     private Vector3 velocity = Vector3.zero;
@@ -48,5 +49,11 @@ public class CameraManager : MonoBehaviour
     {
         frontCam.gameObject.SetActive(!frontCam.gameObject.activeInHierarchy);
         backCamera.gameObject.SetActive(!frontCam.gameObject.activeInHierarchy);
+    }
+
+    public void SwitchMinimapCam() 
+    {
+        cameraHolder.gameObject.SetActive(!cameraHolder.gameObject.activeInHierarchy);
+        minimapCamera.gameObject.SetActive(!minimapCamera.gameObject.activeInHierarchy);
     }
 }

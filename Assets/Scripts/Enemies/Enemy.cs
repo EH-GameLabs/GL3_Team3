@@ -147,7 +147,7 @@ public class Enemy : MonoBehaviour
             if (!isRotating)
             {
                 transform.position = Vector3.MoveTowards(transform.position, destination, Time.deltaTime);
-                transform.rotation = Quaternion.LookRotation(destination - transform.position);
+                //transform.rotation = Quaternion.LookRotation(destination - transform.position);
             }
         }
     }

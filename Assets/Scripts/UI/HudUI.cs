@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class HudUI : BaseUI
 {
-
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
@@ -14,6 +13,7 @@ public class HudUI : BaseUI
         }
         if (Input.GetKeyUp(KeyCode.Tab))
         {
+            CameraManager.instance.SwitchMinimapCam();
             UIManager.instance.ShowUI(UIManager.GameUI.MiniMap);
             Cursor.lockState = CursorLockMode.None;
         }

@@ -25,7 +25,6 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        //Cursor.lockState = CursorLockMode.Locked;
         transform.rotation = Quaternion.identity;
         playerRb = GetComponent<Rigidbody>();
     }
@@ -62,8 +61,6 @@ public class Player : MonoBehaviour
         Vector3 jumpMovement = transform.up * jumpInput;
         Vector3 movement = (movementX + movementZ + jumpMovement).normalized * acceleration /** Time.fixedDeltaTime**/;
 
-        //playerRb.AddForce(movement, ForceMode.Acceleration);
-        //if (playerRb.velocity.magnitude > maxSpeed) { playerRb.velocity = Vector3.ClampMagnitude(playerRb.velocity, maxSpeed); }
         playerRb.velocity = movement;
     }
 
@@ -128,7 +125,6 @@ public class Player : MonoBehaviour
     {
         print("item collected: " + item.name);
         GameManager.instance.AddHostage();
-        print("Hostage score: " + item.score);
     }
 
     public void CollectAmmo(AmmoData ammo)
