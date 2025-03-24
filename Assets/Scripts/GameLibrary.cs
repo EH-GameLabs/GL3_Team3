@@ -15,6 +15,17 @@ public enum GunType
     Primary,
     Secondary,
 }
+
+public enum ShooterType
+{
+    Player,
+    Enemy,
+}
+
+public enum FirePointType
+{
+    One, Two, Four,
+}
 #endregion
 
 #region ENEMY

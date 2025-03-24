@@ -9,17 +9,21 @@ public class Gun
     public bool canShoot { get; private set; }
 
     // Ammo
-    public int currentPrimaryAmmo;
-    public int currentSecondaryAmmo;
+    public int currentAmmo;
+    public WeaponData gun { get; private set; }
+    public GameObject projectile;
 
-    public Gun(WeaponData gun, GameObject gunInstance)
+    private List<Transform> firePoints;
+
+    public Gun(WeaponData gun, ShooterType shooter, List<Transform> firePoints)
     {
         this.gun = gun;
+        projectile = gun.projectilePref;
+        this.firePoints = firePoints;
 
         fireCooldown = 1f / gun.fireRate;
+        currentAmmo = gun.startingAmmo;
     }
-
-    public WeaponData gun { get; private set; }
 
     public void Cooldown()
     {
@@ -35,37 +39,46 @@ public class Gun
     {
         if (canShoot)
         {
-            Debug.Log("shooting");
-
-            // spara dal centro
-            Ray ray = new Ray(firePoint.position, Camera.main.transform.forward * 100);
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity))
+            Debug.DrawRay(firePoint.position, Camera.main.transform.forward * 100, Color.red, 2f);
+            // Using Ammo
+            if (gun.startingAmmo != 0)
             {
-                if (hit.collider.CompareTag(Tags.Enemy))
+                if (currentAmmo > 0)
                 {
-                    // hitta un collider e fa danno
-                    Debug.Log("hittato nemico");
+                    // Sparo
+                    ShootProjectiles();
+
+                    Debug.Log("Sparo con proiettili");
+                    currentAmmo--;
                 }
             }
+            else if (gun.weaponType != GunType.Secondary) // Using Energy
+            {
+                if (Player.Instance.GetCurrentEnergy() - gun.energyUsed >= 0)
+                {
+                    // Sparo
+                    ShootProjectiles();
 
-            Debug.DrawRay(firePoint.position, Camera.main.transform.forward * 100, Color.red, 2f);
-
-            // primary ammo???
-            currentPrimaryAmmo--;
-
+                    Debug.Log("Sparo con energia");
+                    Player.Instance.UseEnergy(gun.energyUsed);
+                }
+            }
             // cooldown
             fireCooldown = 1f / gun.fireRate;
             canShoot = false;
         }
     }
 
-    public void AddPrimaryAmmo(int value)
+    private void ShootProjectiles()
     {
-        currentPrimaryAmmo += value;
+        foreach (var firepoint in firePoints)
+        {
+
+        }
     }
 
-    public void AddSecondaryAmmo(int value)
+    public void AddAmmo(int value)
     {
-        currentSecondaryAmmo += value;
+        currentAmmo += value;
     }
 }

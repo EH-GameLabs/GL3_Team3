@@ -17,5 +17,8 @@ MonoBehaviour:
   type: 0
   damage: 5
   fireRate: 2
-  Gun: {fileID: 2963421592752363537, guid: 345ec7ef31f90a94fb15365774d75df1, type: 3}
   weaponType: 1
+  startingAmmo: 100
+  energyUsed: 0
+  projectilePref: {fileID: 0}
+  firePoints: []

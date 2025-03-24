@@ -14,6 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   itemName: test
   icon: {fileID: 0}
+  type: 0
   damage: 5
   fireRate: 2
-  Gun: {fileID: 2963421592752363537, guid: 345ec7ef31f90a94fb15365774d75df1, type: 3}
+  weaponType: 0
+  startingAmmo: 0
+  energyUsed: 3
+  projectilePref: {fileID: 0}
+  firePoints: []

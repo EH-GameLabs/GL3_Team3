@@ -1,9 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 public class Player : MonoBehaviour
 {
+    public static Player Instance { get; private set; }
+
+    private void Awake()
+    {
+        if (Instance != null && Instance != this) Destroy(gameObject);
+        Instance = this;
+    }
+
     [SerializeField] float acceleration;
     [SerializeField] float maxSpeed;
 
@@ -14,11 +23,12 @@ public class Player : MonoBehaviour
 
     public float mouseSensitivity = 100f;
 
-    [SerializeField] Transform primaryWeaponSlot;
-    [SerializeField] Transform secondaryWeaponSlot;
     private Gun primaryGun;
     private Gun secondaryGun;
-    GameObject gunInstance;
+
+    [SerializeField] private List<Transform> firepoints1 = new List<Transform>();
+    [SerializeField] private List<Transform> firepoints2 = new List<Transform>();
+    [SerializeField] private List<Transform> firepoints3 = new List<Transform>();
 
     public int energy;
     public int shield;
@@ -41,6 +51,7 @@ public class Player : MonoBehaviour
         Rotate();
 
         primaryGun?.Cooldown();
+        secondaryGun?.Cooldown();
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -105,12 +116,23 @@ public class Player : MonoBehaviour
         if (weapon.weaponType.Equals(GunType.Primary))
         {
             //gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);
-            primaryGun = new Gun(weapon, gunInstance);
+            switch (weapon.firePointType)
+            {
+                case FirePointType.One:
+                    primaryGun = new Gun(weapon, ShooterType.Player, firepoints1);
+                    break;
+                case FirePointType.Two:
+                    primaryGun = new Gun(weapon, ShooterType.Player, firepoints2);
+                    break;
+                case FirePointType.Four:
+                    primaryGun = new Gun(weapon, ShooterType.Player, firepoints3);
+                    break;
+            }
         }
         if (weapon.weaponType.Equals(GunType.Secondary))
         {
             //gunInstance = Instantiate(weapon.Gun, secondaryWeaponSlot.position, secondaryWeaponSlot.rotation, secondaryWeaponSlot);
-            secondaryGun = new Gun(weapon, gunInstance);
+            secondaryGun = new Gun(weapon, ShooterType.Player, firepoints1);
         }
     }
 
@@ -129,10 +151,11 @@ public class Player : MonoBehaviour
 
     public void CollectAmmo(AmmoData ammo)
     {
-        if (ammo.gunType.Equals(GunType.Primary))
-            primaryGun?.AddPrimaryAmmo(ammo.ammo);
-        if (ammo.gunType.Equals(GunType.Secondary))
-            secondaryGun?.AddSecondaryAmmo(ammo.ammo);
+        // TODO DA RIFARE
+        //if (ammo.gunType.Equals(GunType.Primary))
+        //    primaryGun?.AddPrimaryAmmo(ammo.ammo);
+        //if (ammo.gunType.Equals(GunType.Secondary))
+        //    secondaryGun?.AddSecondaryAmmo(ammo.ammo);
     }
 
     public void CollectPU_Shield(PowerUpData powerUp)
@@ -174,6 +197,11 @@ public class Player : MonoBehaviour
             accumulator = 0;
         }
     }
+
+    public int GetCurrentEnergy() { return energy; }
+
+    public void UseEnergy(int energyUsed) { energy -= energyUsed; }
+
 
     private void OnTriggerEnter(Collider other)
     {
