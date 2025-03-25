@@ -18,7 +18,8 @@ MonoBehaviour:
   damage: 5
   fireRate: 2
   weaponType: 1
+  firePointType: 0
   startingAmmo: 100
   energyUsed: 0
-  projectilePref: {fileID: 0}
-  firePoints: []
+  projectilePref: {fileID: 6748244418389822698, guid: 06b4b0c4801e49a4d9e110676cc37c45,
+    type: 3}

@@ -10,16 +10,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 021132f7cce47684d8dcafdca3fa2237, type: 3}
-  m_Name: NewWeapon
+  m_Name: W_Quad Laser
   m_EditorClassIdentifier: 
-  itemName: test
+  itemName: 
   icon: {fileID: 0}
   type: 0
-  damage: 5
-  fireRate: 2
+  damage: 7
+  fireRate: 4
   weaponType: 0
-  firePointType: 1
+  firePointType: 2
   startingAmmo: 0
-  energyUsed: 3
+  energyUsed: 1
   projectilePref: {fileID: 6748244418389822698, guid: 06b4b0c4801e49a4d9e110676cc37c45,
     type: 3}

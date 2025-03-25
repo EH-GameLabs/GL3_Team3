@@ -12,7 +12,4 @@ public class WeaponData : ItemData
     public int energyUsed;
     public GameObject projectilePref;
 
-    [Header("Firepoints")]
-    public List<Transform> firePoints;
-
 }

@@ -12,14 +12,17 @@ public class Gun
     public int currentAmmo;
     public WeaponData gun { get; private set; }
     public GameObject projectile;
-
+    private ShooterType shooter;
     private List<Transform> firePoints;
+
+    private Vector3 projectileDirection;
 
     public Gun(WeaponData gun, ShooterType shooter, List<Transform> firePoints)
     {
         this.gun = gun;
         projectile = gun.projectilePref;
         this.firePoints = firePoints;
+        this.shooter = shooter;
 
         fireCooldown = 1f / gun.fireRate;
         currentAmmo = gun.startingAmmo;
@@ -35,13 +38,12 @@ public class Gun
         }
     }
 
-    public void Shoot(Transform firePoint)
+    public void Shoot()
     {
         if (canShoot)
         {
-            Debug.DrawRay(firePoint.position, Camera.main.transform.forward * 100, Color.red, 2f);
             // Using Ammo
-            if (gun.startingAmmo != 0)
+            if (gun.startingAmmo != 0 || shooter == ShooterType.Enemy)
             {
                 if (currentAmmo > 0)
                 {
@@ -49,7 +51,8 @@ public class Gun
                     ShootProjectiles();
 
                     Debug.Log("Sparo con proiettili");
-                    currentAmmo--;
+                    if (shooter != ShooterType.Enemy)
+                        currentAmmo--;
                 }
             }
             else if (gun.weaponType != GunType.Secondary) // Using Energy
@@ -73,7 +76,8 @@ public class Gun
     {
         foreach (var firepoint in firePoints)
         {
-
+            GameObject obj = Object.Instantiate(projectile, firepoint.position, Quaternion.identity);
+            obj.GetComponent<Projectile>().SetDamage(gun.damage);
         }
     }
 

@@ -1,9 +1,10 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     public static Player Instance { get; private set; }
 
@@ -33,8 +34,31 @@ public class Player : MonoBehaviour
     public int energy;
     public int shield;
 
+    public int currentHp { get; set; }
+    private Vector3 spawnPoint;
+    public void TakeDamage(int damage)
+    {
+        shield -= damage;
+        if (shield <= 0)
+        {
+            currentHp--;
+            if (currentHp < 0)
+            {
+                ResetPlayer();
+            }
+        }
+    }
+
+    private void ResetPlayer()
+    {
+        shield = 100;
+        energy = 100;
+        transform.position = spawnPoint;
+    }
+
     private void Start()
     {
+        spawnPoint = transform.position;
         transform.rotation = Quaternion.identity;
         playerRb = GetComponent<Rigidbody>();
     }
@@ -56,12 +80,12 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
-            primaryGun?.Shoot(Camera.main.transform);
+            primaryGun?.Shoot();
         }
         if (Input.GetMouseButtonDown(1))
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
-            secondaryGun?.Shoot(Camera.main.transform);
+            secondaryGun?.Shoot();
         }
     }
 
@@ -74,7 +98,6 @@ public class Player : MonoBehaviour
 
         playerRb.velocity = movement;
     }
-
 
     [SerializeField] private float snapSpeed = 0.2f;
     void Rotate()

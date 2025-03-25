@@ -8,43 +8,42 @@ public class Enemy : MonoBehaviour
     [Header("Scriptable Objects")]
     [SerializeField] private EnemyData enemyData;
     [SerializeField] private EnemyMotorData enemyMotor;
+    [SerializeField] private WeaponData weaponData;
 
     [Header("Sight Stats")]
     [SerializeField][Range(0f, 60f)] private int angle;
     [SerializeField][Range(0f, 60f)] private int nrRay;
     [SerializeField] private float attackRange;
+    [SerializeField] List<Transform> firepoint;
 
     private GameObject player;
     private EnemyState enemyState;
 
-    private int hp;
+    private int currentHp;
     private bool isPlayerInRange;
-    private bool canShoot;
 
     // Player Movement
     private Vector3 destination;
     private bool isRotating;
 
+    private Gun enemyGun;
+
     private void Start()
     {
-        hp = enemyData.hp;
+        currentHp = enemyData.hp;
         destination = transform.position;
 
         enemyState = EnemyState.Idle;
         player = FindAnyObjectByType<Player>().gameObject;
-        canShoot = true;
+        enemyGun = new Gun(weaponData, ShooterType.Enemy, firepoint);
     }
 
     private void Update()
     {
         // se il game è !active return
+        if (UIManager.instance.GetCurrentActiveUI() != UIManager.GameUI.HUD) return;
 
-        // SHOOTING
-        //if (isPlayerInAttackRange && canShoot)
-        //{
-        //    Shoot();
-        //    canShoot = false;
-        //}
+        enemyGun.Cooldown();
 
         // AI STATES
         CheckStates();
@@ -61,7 +60,7 @@ public class Enemy : MonoBehaviour
 
     private void CheckIfAlive()
     {
-        if (hp <= 0)
+        if (currentHp <= 0)
         {
             GameManager.instance.AddScore(enemyData.pointsOnDeath);
             Destroy(gameObject);
@@ -81,6 +80,7 @@ public class Enemy : MonoBehaviour
                 CanSeePlayer();
                 break;
             case EnemyState.Attack:
+                transform.rotation = Quaternion.LookRotation(player.transform.position - transform.position);
                 AttackPlayer();
                 break;
         }
@@ -106,12 +106,22 @@ public class Enemy : MonoBehaviour
             {
                 if (hit.collider.CompareTag(Tags.Player))
                 {
+                    if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
+                    {
+                        print("In AttackRange");
+                        SetState(EnemyState.Attack);
+                        return;
+                    }
+                }
+                if (hit.collider.CompareTag(Tags.Player))
+                {
                     SetState(EnemyState.Chase);
                     return;
                 }
             }
         }
         SetState(EnemyState.Idle);
+
     }
 
     #region AI STATES
@@ -272,21 +282,11 @@ public class Enemy : MonoBehaviour
         print("chasing");
         Debug.DrawLine(transform.position, destination, Color.red);
         transform.position = Vector3.MoveTowards(transform.position, player.transform.position, Time.deltaTime);
-
-        if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
-        {
-            print("In AttackRange");
-            SetState(EnemyState.Attack);
-        }
     }
 
     private void AttackPlayer()
     {
-        if (canShoot)
-        {
-            canShoot = false;
-            Shoot();
-        }
+        enemyGun.Shoot();
 
         if (Vector3.Distance(transform.position, player.transform.position) >= attackRange)
         {
@@ -309,25 +309,11 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    #region SHOOTING
-    public void Shoot()
-    {
-        StartCoroutine(ShootRoutine());
-    }
-
-    private IEnumerator ShootRoutine()
-    {
-        print("Shoot");
-        yield return new WaitForSeconds(enemyData.fireRate);
-        canShoot = true;
-    }
-    #endregion
-
     #region SETTERS & GETTERS
     public void DoDamage(int damage)
     {
-        hp -= damage;
-        if (hp <= 0)
+        currentHp -= damage;
+        if (currentHp <= 0)
         {
             print("Enemy defeated");
             Destroy(gameObject);
