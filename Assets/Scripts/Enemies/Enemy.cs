@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
+public class Enemy : MonoBehaviour, IDamageable
 {
     [Header("Scriptable Objects")]
     [SerializeField] private EnemyData enemyData;
@@ -19,7 +19,7 @@ public class Enemy : MonoBehaviour
     private GameObject player;
     private EnemyState enemyState;
 
-    private int currentHp;
+    public int currentHp { get; set; }
     private bool isPlayerInRange;
 
     // Player Movement
@@ -267,6 +267,7 @@ public class Enemy : MonoBehaviour
     }
 
     public LayerMask ignoreMe;
+
     private float GetDistanceInDirection(Vector3 origin, Vector3 direction)
     {
         Ray ray = new Ray(origin, direction);
@@ -339,6 +340,12 @@ public class Enemy : MonoBehaviour
             isPlayerInRange = false;
             SetState(EnemyState.Idle);
         }
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHp -= damage;
+        if (currentHp < 1) { Destroy(gameObject); }
     }
 
     #endregion
