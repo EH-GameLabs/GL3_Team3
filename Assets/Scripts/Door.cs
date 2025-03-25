@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UIManager;
 
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, IDamageable
 {
-    [SerializeField] float hp;
+    [SerializeField] int hp;
     [SerializeField] DoorsType type;
+
+    public int currentHp { get; set; }
 
     private void OnCollisionEnter(Collision collision)
     {
@@ -15,17 +17,6 @@ public class Door : MonoBehaviour
         {
             OpenDoor();
         }
-    }
-
-    private void OnTriggerEnter(Collider other)
-    {
-        //if projectile interact applydamage()
-    }
-
-    public void ApplyDamage(float dmg) 
-    {
-        hp -= dmg;
-        if (hp < 1) { OpenDoor(); }
     }
 
     private void OpenDoor() 
@@ -42,5 +33,11 @@ public class Door : MonoBehaviour
             }
         }
         gameObject.SetActive(false);
+    }
+
+    public void TakeDamage(int damage)
+    {
+        currentHp -= damage;
+        if (currentHp < 1) { OpenDoor(); }
     }
 }
