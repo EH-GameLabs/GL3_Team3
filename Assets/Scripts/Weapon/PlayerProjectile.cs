@@ -31,7 +31,6 @@ public class PlayerProjectile : Projectile
 
     private void OnCollisionEnter(Collision collision)
     {
-        print(collision.gameObject.name);
         if (collision.gameObject.GetComponent<Projectile>() != null) return;
 
         if (collision.gameObject.GetComponent<IDamageable>() != null)
