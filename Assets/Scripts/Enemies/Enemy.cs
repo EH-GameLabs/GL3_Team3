@@ -55,7 +55,7 @@ public class Enemy : MonoBehaviour, IDamageable
                 Move();
         }
 
-        CheckIfAlive();
+        //CheckIfAlive();
     }
 
     private void CheckIfAlive()
@@ -345,7 +345,11 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         currentHp -= damage;
-        if (currentHp < 1) { Destroy(gameObject); }
+        if (currentHp < 1) 
+        {
+            GameManager.instance.AddScore(enemyData.pointsOnDeath);
+            Destroy(gameObject);
+        }
     }
 
     #endregion

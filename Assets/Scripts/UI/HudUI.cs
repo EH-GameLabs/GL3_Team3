@@ -1,14 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class HudUI : BaseUI
 {
-    [Header("Player Heath")]
+    [Header("Player Health")]
     [SerializeField] private GameObject healthSlot;
     [SerializeField] private List<Sprite> healthPoints;
+
+    [Header("Points")]
+    [SerializeField] private TextMeshProUGUI points;
 
     [Header("Player Shield")]
     [SerializeField] private Image shieldImage;
@@ -19,6 +23,10 @@ public class HudUI : BaseUI
     [Header("Player Key")]
     [SerializeField] private GameObject playerKey;
     [SerializeField] private List<Sprite> keys;
+
+    [Header("Player weapons")]
+    [SerializeField] private Image primaryWeapon;
+    [SerializeField] private Image secondaryWeapon;
 
     private void Start()
     {
@@ -58,5 +66,24 @@ public class HudUI : BaseUI
     public void SetKey(int num)
     {
         playerKey.GetComponent<Image>().sprite = keys[num];
+    }
+
+    public void SetWeapon(Sprite weapon, GunType type) 
+    {
+        if (type == GunType.Primary)
+        {
+            primaryWeapon.sprite = weapon;
+            primaryWeapon.gameObject.SetActive(true);
+        }
+        else 
+        {
+            secondaryWeapon.sprite = weapon;
+            secondaryWeapon.gameObject.SetActive(true);
+        }
+    }
+
+    public void SetPoints(int value) 
+    {
+        points.text = value.ToString();
     }
 }

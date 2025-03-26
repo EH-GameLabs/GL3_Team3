@@ -90,12 +90,12 @@ public class Player : MonoBehaviour, IDamageable
         primaryGun?.Cooldown();
         secondaryGun?.Cooldown();
 
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
             primaryGun?.Shoot();
         }
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButton(1))
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
             secondaryGun?.Shoot();
@@ -149,6 +149,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public void EquipWeapon(WeaponData weapon)
     {
+        FindAnyObjectByType<HudUI>().SetWeapon(weapon.icon, weapon.weaponType);
         if (weapon.weaponType.Equals(GunType.Primary))
         {
             //gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);

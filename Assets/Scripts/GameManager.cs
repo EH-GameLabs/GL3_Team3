@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +23,11 @@ public class GameManager : MonoBehaviour
     public int playerLife;
     public int pointsPerLife;
 
-    public void AddScore(int score) { gameScore += score; }
+    public void AddScore(int score)
+    { 
+        gameScore += score;
+        FindAnyObjectByType<HudUI>().SetPoints(score);
+    }
     public void AddKeys() { keysCollected++; FindAnyObjectByType<HudUI>().SetKey(keysCollected); }
 
     public void AddHostage() { hostageCollected++; }

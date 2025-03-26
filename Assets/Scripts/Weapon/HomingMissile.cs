@@ -12,6 +12,7 @@ public class HomingMissile : Projectile
     private void Start()
     {
         enemies = FindObjectsOfType<Enemy>();
+        if (enemies.Length == 0) { Destroy(gameObject); return; }
         closest = GetClosest();
     }
 

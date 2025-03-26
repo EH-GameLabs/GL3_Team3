@@ -22,12 +22,6 @@ public class MinimapMovement : MonoBehaviour
     [Tooltip("Distanza massima consentita")]
     public float maxDistance = 100.0f;
 
-    [Tooltip("Limite minimo dell'angolo verticale")]
-    public float yMinLimit = -20f;
-
-    [Tooltip("Limite massimo dell'angolo verticale")]
-    public float yMaxLimit = 80f;
-
     private float currentX = 0.0f;
     private float currentY = 0.0f;
 
