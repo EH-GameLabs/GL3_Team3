@@ -15,7 +15,7 @@ public class CollectibleItem : MonoBehaviour, ICollectible
                 player.CollectAmmo((AmmoData)itemData);
                 break;
             case ItemsType.Key:
-                player.CollectItem(itemData);
+                player.CollectKey(itemData);
                 break;
             case ItemsType.Hostage:
                 player.CollectHostage((HostageData)itemData);

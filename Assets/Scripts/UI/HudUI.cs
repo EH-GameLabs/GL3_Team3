@@ -1,9 +1,30 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HudUI : BaseUI
 {
+    [Header("Player Heath")]
+    [SerializeField] private GameObject healthSlot;
+    [SerializeField] private List<Sprite> healthPoints;
+
+    [Header("Player Shield")]
+    [SerializeField] private Image shieldImage;
+
+    [Header("Player Energy")]
+    [SerializeField] private Image energyImage;
+
+    [Header("Player Key")]
+    [SerializeField] private GameObject playerKey;
+    [SerializeField] private List<Sprite> keys;
+
+    private void Start()
+    {
+        healthSlot.GetComponent<Image>().sprite = healthPoints[^1];
+    }
+
     private void Update()
     {
         if (Input.GetKeyUp(KeyCode.Escape))
@@ -17,5 +38,25 @@ public class HudUI : BaseUI
             UIManager.instance.ShowUI(UIManager.GameUI.MiniMap);
             Cursor.lockState = CursorLockMode.None;
         }
+    }
+
+    public void SetHealth(int health)
+    {
+        healthSlot.GetComponent<Image>().sprite = healthPoints[health];
+    }
+
+    public void SetEnergy(float value)
+    {
+        energyImage.fillAmount = value / 100f;
+    }
+
+    public void SetShield(float value)
+    {
+        shieldImage.fillAmount = value / 100;
+    }
+
+    public void SetKey(int num)
+    {
+        playerKey.GetComponent<Image>().sprite = keys[num];
     }
 }

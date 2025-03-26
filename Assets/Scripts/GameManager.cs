@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
     public int pointsPerLife;
 
     public void AddScore(int score) { gameScore += score; }
-    public void AddKeys() { keysCollected++; }
+    public void AddKeys() { keysCollected++; FindAnyObjectByType<HudUI>().SetKey(keysCollected); }
+
     public void AddHostage() { hostageCollected++; }
 
     public int GetFinalScore()

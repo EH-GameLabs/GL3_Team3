@@ -35,16 +35,27 @@ public class Player : MonoBehaviour, IDamageable
     public int shield;
 
     public int currentHp { get; set; }
+    public int startingHP;
     private Vector3 spawnPoint;
     public void TakeDamage(int damage)
     {
         shield -= damage;
+        FindAnyObjectByType<HudUI>().SetShield(shield);
         if (shield <= 0)
         {
+            shield = 100;
             currentHp--;
+
+            // UI
+            FindAnyObjectByType<HudUI>().SetHealth(currentHp);
+            FindAnyObjectByType<HudUI>().SetShield(shield);
+
             if (currentHp < 0)
             {
-                ResetPlayer();
+                //ResetPlayer();
+                //FindAnyObjectByType<HudUI>().SetHealth(currentHp);
+                // UI YOU LOSE
+                print("Hai perso");
             }
         }
     }
@@ -54,10 +65,12 @@ public class Player : MonoBehaviour, IDamageable
         shield = 100;
         energy = 100;
         transform.position = spawnPoint;
+        currentHp = startingHP;
     }
 
     private void Start()
     {
+        currentHp = startingHP;
         spawnPoint = transform.position;
         transform.rotation = Quaternion.identity;
         playerRb = GetComponent<Rigidbody>();
@@ -159,7 +172,7 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    public void CollectItem(ItemData item)
+    public void CollectKey(ItemData item)
     {
         print("item collected: " + item.name);
         GameManager.instance.AddKeys();
@@ -223,7 +236,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public int GetCurrentEnergy() { return energy; }
 
-    public void UseEnergy(int energyUsed) { energy -= energyUsed; }
+    public void UseEnergy(int energyUsed) { energy -= energyUsed; FindAnyObjectByType<HudUI>().SetEnergy(energy); }
 
 
     private void OnTriggerEnter(Collider other)
