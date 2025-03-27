@@ -14,6 +14,7 @@ public class Reactor : MonoBehaviour, IDamageable
 
     public void TakeDamage(int damage)
     {
+        FindAnyObjectByType<HudUI>().ShowHitmarker();
         currentHp -= damage;
         if (currentHp < 1) { print("Win!"); }
     }
