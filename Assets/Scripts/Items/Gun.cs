@@ -8,8 +8,6 @@ public class Gun
     float fireCooldown;
     public bool canShoot { get; private set; }
 
-    // Ammo
-    public int currentAmmo;
     public WeaponData gun { get; private set; }
     public GameObject projectile;
     private ShooterType shooter;
@@ -25,7 +23,6 @@ public class Gun
         this.shooter = shooter;
 
         fireCooldown = 1f / gun.fireRate;
-        currentAmmo = gun.startingAmmo;
     }
 
     public void Cooldown()
@@ -45,14 +42,21 @@ public class Gun
             // Using Ammo
             if (gun.startingAmmo != 0 || shooter == ShooterType.Enemy)
             {
-                if (currentAmmo > 0)
+                if (gun.weaponType == GunType.Primary && (Player.Instance.primaryAmmo > 0) || shooter == ShooterType.Enemy)
                 {
                     // Sparo
                     ShootProjectiles();
 
-                    Debug.Log("Sparo con proiettili");
                     if (shooter != ShooterType.Enemy)
-                        currentAmmo--;
+                        Player.Instance.primaryAmmo--;
+                }
+                else if (gun.weaponType == GunType.Secondary && (Player.Instance.secondaryAmmo > 0) || shooter == ShooterType.Enemy)
+                {
+                    // Sparo
+                    ShootProjectiles();
+
+                    if (shooter != ShooterType.Enemy)
+                        Player.Instance.secondaryAmmo--;
                 }
             }
             else if (gun.weaponType != GunType.Secondary) // Using Energy
@@ -79,10 +83,5 @@ public class Gun
             GameObject obj = Object.Instantiate(projectile, firepoint.position, Quaternion.identity);
             obj.GetComponent<Projectile>().SetDamage(gun.damage);
         }
-    }
-
-    public void AddAmmo(int value)
-    {
-        currentAmmo += value;
     }
 }

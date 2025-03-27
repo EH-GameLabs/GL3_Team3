@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,8 @@ public class PlayerProjectile : Projectile
 {
     private Vector3 destination;
     private Vector3 direction;
+
+    private float destructionTimer = 15f;
 
     private void Start()
     {
@@ -22,6 +25,17 @@ public class PlayerProjectile : Projectile
     {
         if (UIManager.instance.GetCurrentActiveUI() != UIManager.GameUI.HUD) return;
         transform.Translate(speed * Time.deltaTime * direction);
+
+        UpdateTimer();
+    }
+
+    private void UpdateTimer()
+    {
+        destructionTimer -= Time.deltaTime;
+        if (destructionTimer < 0)
+        {
+            Destroy(gameObject);
+        }
     }
 
     public override void SetDestination(Vector3 destination)

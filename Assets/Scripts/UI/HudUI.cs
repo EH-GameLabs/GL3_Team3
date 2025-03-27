@@ -28,6 +28,16 @@ public class HudUI : BaseUI
     [SerializeField] private Image primaryWeapon;
     [SerializeField] private Image secondaryWeapon;
 
+    [Header("Hitmarker")]
+    [SerializeField] private GameObject hitmarker;
+    [SerializeField] private float showTimeHM;
+
+    [Header("Player ammo")]
+    [SerializeField] private TextMeshProUGUI primaryAmmoUI;
+    [SerializeField] private TextMeshProUGUI secondaryAmmoUI;
+
+    IEnumerator currentHitmarkerRoutine;
+
     private void Start()
     {
         healthSlot.GetComponent<Image>().sprite = healthPoints[^1];
@@ -68,22 +78,55 @@ public class HudUI : BaseUI
         playerKey.GetComponent<Image>().sprite = keys[num];
     }
 
-    public void SetWeapon(Sprite weapon, GunType type) 
+    public void SetWeapon(Sprite weapon, GunType type)
     {
         if (type == GunType.Primary)
         {
             primaryWeapon.sprite = weapon;
             primaryWeapon.gameObject.SetActive(true);
         }
-        else 
+        else
         {
             secondaryWeapon.sprite = weapon;
             secondaryWeapon.gameObject.SetActive(true);
         }
     }
 
-    public void SetPoints(int value) 
+    public void SetPoints(int value)
     {
         points.text = value.ToString();
+    }
+
+    public void ShowHitmarker()
+    {
+        hitmarker.gameObject.SetActive(true);
+
+        if (currentHitmarkerRoutine != null) StopCoroutine(currentHitmarkerRoutine);
+        currentHitmarkerRoutine = HitmarkerRoutine();
+        StartCoroutine(currentHitmarkerRoutine);
+    }
+
+    IEnumerator HitmarkerRoutine()
+    {
+        float t = 0;
+        while (t < showTimeHM)
+        {
+            t += Time.deltaTime;
+            yield return null;
+        }
+        hitmarker.gameObject.SetActive(false);
+    }
+
+    public void SetAmmo(GunType gunType, int value)
+    {
+        switch (gunType)
+        {
+            case GunType.Primary:
+                primaryAmmoUI.text = "AMMO: " + value;
+                break;
+            case GunType.Secondary:
+                secondaryAmmoUI.text = "AMMO: " + value;
+                break;
+        }
     }
 }

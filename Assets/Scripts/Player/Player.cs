@@ -23,9 +23,17 @@ public class Player : MonoBehaviour, IDamageable
     private Rigidbody playerRb;
 
     public float mouseSensitivity = 100f;
+    [Range(0.5f, 1.5f)] private float sensMultiplier = 1f;
+
+    public void SetSensMultiplier(float value)
+    {
+        sensMultiplier = value;
+    }
 
     private Gun primaryGun;
+    public int primaryAmmo;
     private Gun secondaryGun;
+    public int secondaryAmmo;
 
     [SerializeField] private List<Transform> firepoints1 = new List<Transform>();
     [SerializeField] private List<Transform> firepoints2 = new List<Transform>();
@@ -37,18 +45,24 @@ public class Player : MonoBehaviour, IDamageable
     public int currentHp { get; set; }
     public int startingHP;
     private Vector3 spawnPoint;
+
+    private HudUI HudUI;
+
+
     public void TakeDamage(int damage)
     {
         shield -= damage;
-        FindAnyObjectByType<HudUI>().SetShield(shield);
+        HudUI.SetShield(shield);
         if (shield <= 0)
         {
             shield = 100;
             currentHp--;
+            GameManager.instance.RemoveHostage();
+            transform.position = spawnPoint;
 
             // UI
-            FindAnyObjectByType<HudUI>().SetHealth(currentHp);
-            FindAnyObjectByType<HudUI>().SetShield(shield);
+            HudUI.SetHealth(currentHp);
+            HudUI.SetShield(shield);
 
             if (currentHp < 0)
             {
@@ -60,16 +74,11 @@ public class Player : MonoBehaviour, IDamageable
         }
     }
 
-    private void ResetPlayer()
-    {
-        shield = 100;
-        energy = 100;
-        transform.position = spawnPoint;
-        currentHp = startingHP;
-    }
-
     private void Start()
     {
+        HudUI = FindAnyObjectByType<HudUI>(FindObjectsInactive.Include);
+        HudUI.SetAmmo(GunType.Primary, primaryAmmo);
+        HudUI.SetAmmo(GunType.Secondary, secondaryAmmo);
         currentHp = startingHP;
         spawnPoint = transform.position;
         transform.rotation = Quaternion.identity;
@@ -94,11 +103,13 @@ public class Player : MonoBehaviour, IDamageable
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
             primaryGun?.Shoot();
+            HudUI.SetAmmo(GunType.Primary, primaryAmmo);
         }
         if (Input.GetMouseButton(1))
         {
             //gun?.Shoot(gunInstance.GetComponent<GunController>().firePoint);
             secondaryGun?.Shoot();
+            HudUI.SetAmmo(GunType.Secondary, secondaryAmmo);
         }
     }
 
@@ -115,9 +126,9 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private float snapSpeed = 0.2f;
     void Rotate()
     {
-        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * Time.deltaTime;
-        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
-        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * Time.deltaTime;
+        float mouseX = Input.GetAxis("Mouse X") * mouseSensitivity * sensMultiplier * Time.deltaTime;
+        float mouseY = Input.GetAxis("Mouse Y") * mouseSensitivity * sensMultiplier * Time.deltaTime;
+        float inputZ = Input.GetAxisRaw("Rotation") * mouseSensitivity * sensMultiplier * Time.deltaTime;
 
         // Crea quaternioni incrementali per ogni asse
         Quaternion rotX = Quaternion.AngleAxis(-mouseY, Vector3.right);
@@ -149,10 +160,11 @@ public class Player : MonoBehaviour, IDamageable
 
     public void EquipWeapon(WeaponData weapon)
     {
-        FindAnyObjectByType<HudUI>().SetWeapon(weapon.icon, weapon.weaponType);
+        HudUI.SetWeapon(weapon.icon, weapon.weaponType);
         if (weapon.weaponType.Equals(GunType.Primary))
         {
-            //gunInstance = Instantiate(weapon.Gun, primaryWeaponSlot.position, primaryWeaponSlot.rotation, primaryWeaponSlot);
+            primaryAmmo += weapon.startingAmmo;
+            CheckMaxAmmo(weapon.weaponType);
             switch (weapon.firePointType)
             {
                 case FirePointType.One:
@@ -168,8 +180,30 @@ public class Player : MonoBehaviour, IDamageable
         }
         if (weapon.weaponType.Equals(GunType.Secondary))
         {
-            //gunInstance = Instantiate(weapon.Gun, secondaryWeaponSlot.position, secondaryWeaponSlot.rotation, secondaryWeaponSlot);
+            secondaryAmmo += weapon.startingAmmo;
+            CheckMaxAmmo(weapon.weaponType);
             secondaryGun = new Gun(weapon, ShooterType.Player, firepoints1);
+        }
+    }
+
+    private void CheckMaxAmmo(GunType weaponType)
+    {
+        switch (weaponType)
+        {
+            case GunType.Primary:
+                if (primaryAmmo > 200)
+                {
+                    primaryAmmo = 200;
+                }
+                HudUI.SetAmmo(weaponType, primaryAmmo);
+                break;
+            case GunType.Secondary:
+                if (secondaryAmmo > 20)
+                {
+                    secondaryAmmo = 20;
+                }
+                HudUI.SetAmmo(weaponType, secondaryAmmo);
+                break;
         }
     }
 
@@ -188,11 +222,15 @@ public class Player : MonoBehaviour, IDamageable
 
     public void CollectAmmo(AmmoData ammo)
     {
-        // TODO DA RIFARE
-        //if (ammo.gunType.Equals(GunType.Primary))
-        //    primaryGun?.AddPrimaryAmmo(ammo.ammo);
-        //if (ammo.gunType.Equals(GunType.Secondary))
-        //    secondaryGun?.AddSecondaryAmmo(ammo.ammo);
+        if (ammo.gunType.Equals(GunType.Primary))
+        {
+            primaryAmmo += ammo.ammo;
+        }
+        if (ammo.gunType.Equals(GunType.Secondary))
+        {
+            secondaryAmmo += ammo.ammo;
+        }
+        CheckMaxAmmo(ammo.gunType);
     }
 
     public void CollectPU_Shield(PowerUpData powerUp)
@@ -237,7 +275,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public int GetCurrentEnergy() { return energy; }
 
-    public void UseEnergy(int energyUsed) { energy -= energyUsed; FindAnyObjectByType<HudUI>().SetEnergy(energy); }
+    public void UseEnergy(int energyUsed) { energy -= energyUsed; HudUI.SetEnergy(energy); }
 
 
     private void OnTriggerEnter(Collider other)

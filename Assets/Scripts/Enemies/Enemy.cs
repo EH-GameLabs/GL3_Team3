@@ -345,10 +345,24 @@ public class Enemy : MonoBehaviour, IDamageable
     public void TakeDamage(int damage)
     {
         currentHp -= damage;
-        if (currentHp < 1) 
+        FindAnyObjectByType<HudUI>().ShowHitmarker();
+        if (currentHp < 1)
         {
             GameManager.instance.AddScore(enemyData.pointsOnDeath);
+            TrySpawnNigger();
             Destroy(gameObject);
+        }
+    }
+
+    private void TrySpawnNigger()
+    {
+        if (enemyData.drop.dropObj == null) return;
+
+        bool drop = Random.Range(0f, 1f) <= enemyData.drop.weight ? true : false;
+
+        if (drop)
+        {
+            Instantiate(enemyData.drop.dropObj, transform.position, Quaternion.identity);
         }
     }
 

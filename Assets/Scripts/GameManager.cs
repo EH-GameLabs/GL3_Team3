@@ -24,13 +24,19 @@ public class GameManager : MonoBehaviour
     public int pointsPerLife;
 
     public void AddScore(int score)
-    { 
+    {
         gameScore += score;
         FindAnyObjectByType<HudUI>().SetPoints(score);
     }
     public void AddKeys() { keysCollected++; FindAnyObjectByType<HudUI>().SetKey(keysCollected); }
 
     public void AddHostage() { hostageCollected++; }
+    public void RemoveHostage()
+    {
+        hostageCollected--;
+        if (hostageCollected < 0)
+            hostageCollected = 0;
+    }
 
     public int GetFinalScore()
     {
