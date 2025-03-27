@@ -53,7 +53,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 89e0a1f674ca4c54388e092ca80f7378, type: 2}
   angle: 30
   nrRay: 12
-  attackRange: 4
+  attackRange: 15
   firepoint:
   - {fileID: 7999156978364640572}
   mapLayer:

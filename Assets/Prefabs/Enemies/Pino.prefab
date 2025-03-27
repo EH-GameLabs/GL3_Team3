@@ -53,7 +53,7 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 89e0a1f674ca4c54388e092ca80f7378, type: 2}
   angle: 30
   nrRay: 12
-  attackRange: 6
+  attackRange: 10
   firepoint:
   - {fileID: 7999156978364640572}
   mapLayer:
@@ -99,8 +99,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1, y: 1.3181071, z: 2.6419468}
+  m_Center: {x: 0, y: -0.15905356, z: -0.4586811}
 --- !u!1 &6323393475498093393
 GameObject:
   m_ObjectHideFlags: 0
@@ -126,7 +126,7 @@ Transform:
   m_GameObject: {fileID: 6323393475498093393}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.457, z: 0.771}
+  m_LocalPosition: {x: 0, y: -0.457, z: 0.942}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -82,9 +82,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f2a1270c9d5e7445870bc7a075f9b42, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  acceleration: 5
+  acceleration: 7
   maxSpeed: 20
-  mouseSensitivity: 100
+  mouseSensitivity: 150
   primaryAmmo: 0
   secondaryAmmo: 0
   firepoints1:
