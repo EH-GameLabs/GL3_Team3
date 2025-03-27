@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     public void AddScore(int score)
     {
         gameScore += score;
-        FindAnyObjectByType<HudUI>().SetPoints(score);
+        FindAnyObjectByType<HudUI>().SetPoints(gameScore);
     }
     public void AddKeys() { keysCollected++; FindAnyObjectByType<HudUI>().SetKey(keysCollected); }
 

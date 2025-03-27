@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hp: 21
   attackDamage: 3
-  fireRate: 3
+  fireRate: 2
   pointsOnDeath: 100
   drop:
     dropObj: {fileID: 5916753266284983462, guid: 97f81f6c6ad2dc843b829aa98976082c,

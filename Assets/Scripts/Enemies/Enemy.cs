@@ -90,6 +90,8 @@ public class Enemy : MonoBehaviour, IDamageable
     {
         if (player == null) return;
 
+        print("CanSeePlayer");
+
         Vector3 directionToPlayer = (player.transform.position - transform.position).normalized;
         Ray ray;
 
@@ -102,19 +104,15 @@ public class Enemy : MonoBehaviour, IDamageable
             Debug.DrawRay(transform.position, rayDirection * 20, Color.red);
 
             ray = new Ray(transform.position, rayDirection);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~0, QueryTriggerInteraction.Ignore))
             {
                 if (hit.collider.CompareTag(Tags.Player))
                 {
-                    if (Vector3.Distance(transform.position, player.transform.position) < attackRange)
+                    if (Vector3.Distance(transform.position, player.transform.position) <= attackRange)
                     {
-                        print("In AttackRange");
                         SetState(EnemyState.Attack);
                         return;
                     }
-                }
-                if (hit.collider.CompareTag(Tags.Player))
-                {
                     SetState(EnemyState.Chase);
                     return;
                 }
@@ -134,14 +132,10 @@ public class Enemy : MonoBehaviour, IDamageable
             // Calcola la direzione di movimento dal punto attuale verso la destinazione
             Vector3 moveDir = (destination - transform.position).normalized;
 
-            //int layersToIgnore = LayerMask.GetMask("Seen");
-            //int layerMask = ~layersToIgnore; // Ignora questi layer
-            //print("Layer: " + layerMask);
-
-            if (Physics.Raycast(new Ray(transform.position, moveDir), out RaycastHit hit, Vector3.Distance(transform.position, destination), ~ignoreMe))
+            if (Physics.Raycast(new Ray(transform.position, moveDir), out RaycastHit hit, Mathf.Infinity, mapLayer))
             {
                 // Per ciascun asse, sottraggo 1 o -1 in base alla direzione
-                destination = hit.collider.transform.position - new Vector3(
+                destination = hit.point - new Vector3(
                     Mathf.Sign(moveDir.x),
                     Mathf.Sign(moveDir.y),
                     Mathf.Sign(moveDir.z)
@@ -149,7 +143,6 @@ public class Enemy : MonoBehaviour, IDamageable
             }
             isRotating = true;
             StartCoroutine(RotateToDirection(destination, 0.5f));
-            print("starting rotation");
         }
         else
         {
@@ -193,8 +186,10 @@ public class Enemy : MonoBehaviour, IDamageable
         // Calcola le distanze disponibili in ciascuna direzione
         float dForward = GetDistanceInDirection(transform.position, transform.forward);
         float dBackward = GetDistanceInDirection(transform.position, -transform.forward);
+
         float dRight = GetDistanceInDirection(transform.position, transform.right);
         float dLeft = GetDistanceInDirection(transform.position, -transform.right);
+
         float dUp = GetDistanceInDirection(transform.position, transform.up);
         float dDown = GetDistanceInDirection(transform.position, -transform.up);
 
@@ -266,12 +261,12 @@ public class Enemy : MonoBehaviour, IDamageable
         return nextPoint;
     }
 
-    public LayerMask ignoreMe;
+    public LayerMask mapLayer;
 
     private float GetDistanceInDirection(Vector3 origin, Vector3 direction)
     {
         Ray ray = new Ray(origin, direction);
-        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, ~ignoreMe))
+        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, mapLayer))
         {
             return hit.distance;
         }

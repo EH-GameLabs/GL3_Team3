@@ -240,6 +240,7 @@ public class Player : MonoBehaviour, IDamageable
         {
             shield = 100;
         }
+        HudUI.SetShield(shield);
         Debug.Log("Added: " + powerUp.value);
         Debug.Log("- shield: " + shield);
     }
@@ -251,6 +252,8 @@ public class Player : MonoBehaviour, IDamageable
         {
             energy = 100;
         }
+
+        HudUI.SetEnergy(energy);
         Debug.Log("Added: " + powerUp.value);
         Debug.Log("- energy: " + energy);
     }
@@ -271,6 +274,7 @@ public class Player : MonoBehaviour, IDamageable
             energy += 1;
             accumulator = 0;
         }
+        HudUI.SetEnergy(energy);
     }
 
     public int GetCurrentEnergy() { return energy; }

@@ -161,9 +161,9 @@ MonoBehaviour:
   attackRange: 4
   firepoint:
   - {fileID: 7999156978364640572}
-  ignoreMe:
+  mapLayer:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 256
 --- !u!135 &8714946002969815258
 SphereCollider:
   m_ObjectHideFlags: 0
