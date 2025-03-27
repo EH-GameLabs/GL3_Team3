@@ -15,7 +15,7 @@ MonoBehaviour:
   itemName: 
   icon: {fileID: 21300000, guid: c87bbefadd04ce1438564bdceae58581, type: 3}
   type: 0
-  damage: 2
+  damage: 20
   fireRate: 5
   weaponType: 0
   firePointType: 0
