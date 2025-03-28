@@ -51,9 +51,9 @@ MonoBehaviour:
   enemyData: {fileID: 11400000, guid: 7d531abf252e6cc4b94373bd53b459de, type: 2}
   enemyMotor: {fileID: 11400000, guid: 879ffae242c7762479bd4ae7baace069, type: 2}
   weaponData: {fileID: 11400000, guid: 89e0a1f674ca4c54388e092ca80f7378, type: 2}
-  angle: 30
+  angle: 40
   nrRay: 12
-  attackRange: 30
+  attackRange: 40
   firepoint:
   - {fileID: 7999156978364640572}
   mapLayer:

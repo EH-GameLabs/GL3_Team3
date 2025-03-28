@@ -101,7 +101,7 @@ MonoBehaviour:
   shield: 100
   startingHP: 0
   snapSpeed: 0.3
-  incrementPerSecond: 1
+  incrementPerSecond: 20
 --- !u!54 &4771530236451012353
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -729,7 +729,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8442097768773564450}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
