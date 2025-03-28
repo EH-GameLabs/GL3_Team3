@@ -17,6 +17,7 @@ public class UIManager : MonoBehaviour
         Lose,
         Option,
         MiniMap,
+        Score,
     }
 
     private Dictionary<GameUI, IGameUI> registeredUIs = new Dictionary<GameUI, IGameUI>();

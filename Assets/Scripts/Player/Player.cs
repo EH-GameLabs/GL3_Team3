@@ -55,22 +55,22 @@ public class Player : MonoBehaviour, IDamageable
         HudUI.SetShield(shield);
         if (shield <= 0)
         {
-            shield = 100;
+
             currentHp--;
             GameManager.instance.RemoveHostage();
             transform.position = spawnPoint;
 
             // UI
+
+            if (currentHp <= 0)
+            {
+                //print("Hai perso");
+                GameManager.instance.ShowLose();
+                return;
+            }
+            shield = 100;
             HudUI.SetHealth(currentHp);
             HudUI.SetShield(shield);
-
-            if (currentHp < 0)
-            {
-                //ResetPlayer();
-                //FindAnyObjectByType<HudUI>().SetHealth(currentHp);
-                // UI YOU LOSE
-                print("Hai perso");
-            }
         }
     }
 
@@ -121,6 +121,12 @@ public class Player : MonoBehaviour, IDamageable
         Vector3 movement = (movementX + movementZ + jumpMovement).normalized * acceleration /** Time.fixedDeltaTime**/;
 
         playerRb.velocity = movement;
+    }
+
+    [SerializeField] private WeaponData resetWeapon;
+    public void ResetWeapon()
+    {
+        EquipWeapon(resetWeapon);
     }
 
     [SerializeField] private float snapSpeed = 0.2f;
@@ -267,6 +273,12 @@ public class Player : MonoBehaviour, IDamageable
     private bool playerInside = false;
     public void ChargingEnergy()
     {
+        if (energy >= 100)
+        {
+            energy = 100;
+            return;
+        }
+
         accumulator += incrementPerSecond * Time.deltaTime;
         // Quando l'accumulatore supera 1, si incrementa il valore intero
         if (accumulator >= 1f)

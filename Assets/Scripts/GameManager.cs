@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,6 +23,19 @@ public class GameManager : MonoBehaviour
     public int pointsPerHostage;
     public int playerLife;
     public int pointsPerLife;
+    public int secretDoors;
+
+    [Header("UI Score")]
+    private GameObject scorePanel;
+
+    [Header("SecretRooms")]
+    [SerializeField] private List<GameObject> room1;
+    [SerializeField] private List<GameObject> room2;
+
+    private void Start()
+    {
+        scorePanel = FindAnyObjectByType<ScoreUI>(FindObjectsInactive.Include).gameObject;
+    }
 
     public void AddScore(int score)
     {
@@ -33,9 +47,57 @@ public class GameManager : MonoBehaviour
     public void AddHostage() { hostageCollected++; }
     public void RemoveHostage()
     {
-        hostageCollected--;
-        if (hostageCollected < 0)
-            hostageCollected = 0;
+        hostageCollected = 0;
+    }
+
+    public void ShowWin()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        UIManager.instance.ShowUI(UIManager.GameUI.Win);
+        ShowScore();
+    }
+
+    public void ShowLose()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        UIManager.instance.ShowUI(UIManager.GameUI.Lose);
+        ShowScore();
+    }
+
+    private void ShowScore()
+    {
+        Player player = FindAnyObjectByType<Player>();
+        scorePanel.SetActive(true);
+        ScoreUI scoreUI = scorePanel.GetComponent<ScoreUI>();
+        scoreUI.SetPoints(ScoreType.Nemici, gameScore);
+        scoreUI.SetPoints(ScoreType.Scudo, player.shield);
+        scoreUI.SetPoints(ScoreType.Energia, player.energy);
+        scoreUI.SetPoints(ScoreType.Ostaggi, hostageCollected * pointsPerHostage);
+        scoreUI.SetPoints(ScoreType.Totali, GetFinalScore());
+
+        CalculateSecretDoors();
+        scoreUI.SetPoints(ScoreType.StanzeSegrete, secretDoors);
+
+    }
+
+    private void CalculateSecretDoors()
+    {
+        foreach (var door in room1)
+        {
+            if (!door.activeInHierarchy)
+            {
+                secretDoors++;
+                break;
+            }
+        }
+        foreach (var door in room2)
+        {
+            if (!door.activeInHierarchy)
+            {
+                secretDoors++;
+                break;
+            }
+        }
     }
 
     public int GetFinalScore()

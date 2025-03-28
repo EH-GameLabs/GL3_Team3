@@ -48,7 +48,13 @@ public class Gun
                     ShootProjectiles();
 
                     if (shooter != ShooterType.Enemy)
+                    {
                         Player.Instance.primaryAmmo--;
+                        if (Player.Instance.primaryAmmo <= 0)
+                        {
+                            Player.Instance.ResetWeapon();
+                        }
+                    }
                 }
                 else if (gun.weaponType == GunType.Secondary && (Player.Instance.secondaryAmmo > 0) || shooter == ShooterType.Enemy)
                 {

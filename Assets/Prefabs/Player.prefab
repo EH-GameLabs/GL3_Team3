@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 5018646086251272037}
   - component: {fileID: 4771530236451012353}
   - component: {fileID: 4174783399250960678}
-  - component: {fileID: 4862270577419451736}
+  - component: {fileID: 4533478602109157379}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -99,7 +99,8 @@ MonoBehaviour:
   - {fileID: 2885014282988013160}
   energy: 100
   shield: 100
-  startingHP: 0
+  startingHP: 3
+  resetWeapon: {fileID: 11400000, guid: 4fa2badf47b81384db58b73aa963688e, type: 2}
   snapSpeed: 0.3
   incrementPerSecond: 20
 --- !u!54 &4771530236451012353
@@ -150,7 +151,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!81 &4862270577419451736
+--- !u!81 &4533478602109157379
 AudioListener:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
